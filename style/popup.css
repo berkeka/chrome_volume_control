@@ -32,3 +32,8 @@
     background: #4CAF50;
     cursor: pointer;
   }
+
+  div h4 img {
+    height: 32px;
+    width: 32px;
+  } 
