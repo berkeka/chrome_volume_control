@@ -1,4 +1,50 @@
-// Get value of slide after change and store it
-document.getElementById('slide').onchange = function(){
-    console.log(this.value);
+chrome.tabs.getAllInWindow(null, function(tabs){
+    for (var i = 0; i < tabs.length; i++) {  
+        var key = tabs[i].id;
+        var value = 50;
+        
+        createSlide(tabs[i], value);
+        getData(key);
+    }
+
+    // Get all the sliders in the html
+    var collection = document.getElementsByTagName("input");
+    // Loop through each item 
+    for(let item of collection){
+        item.addEventListener("change", function(event){
+            // Get new value
+            key = event.target.id;
+            value = event.target.value;
+            chrome.storage.local.set({[key]: value}, function() {
+                console.log(key + " changed to "+ value.toString());
+            });
+        });
+    }
+});
+
+function getData(key) {
+    chrome.storage.local.get([key.toString()], function(result) {
+        if (typeof result[key] !== 'undefined') {
+            // Get existing value
+            let item = document.getElementById(key.toString());
+            item.value = result[key];
+        }
+        else{
+            // Tab id doesnt exist in storage. Init value
+            chrome.storage.sync.set({[key]: 50}, function() {});
+        }
+    });
+}
+
+function createSlide(tab, volume){
+    var target = document.querySelector('#tabs');
+    var div = document.createElement('div');
+    div.innerHTML = 
+    `
+    
+    <h4><img src="${tab.favIconUrl}">${tab.title}<h4>
+    <input id="${tab.id}" type="range" min="1" max="100" value="${volume}">
+    <hr>
+    `;
+    target.parentNode.insertBefore( div, target.nextSibling );
 }
