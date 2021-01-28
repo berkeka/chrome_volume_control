@@ -41,10 +41,17 @@ function createSlide(tab, volume){
     var div = document.createElement('div');
     div.innerHTML = 
     `
-    
-    <h4><img src="${tab.favIconUrl}">${tab.title}<h4>
-    <input id="${tab.id}" type="range" min="1" max="100" value="${volume}">
-    <hr>
+    <div class="card">
+        <div class="container">
+            <img src="${tab.favIconUrl}">
+            <div class="tab-name">
+                <span>${tab.title}</span>
+            </div>
+        </div>
+        <div class="slider">
+            <input id="${tab.id}" type="range" min="1" max="100" value="${volume}">
+        </div>
+    </div>
     `;
     target.parentNode.insertBefore( div, target.nextSibling );
 }
