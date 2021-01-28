@@ -2,7 +2,7 @@ chrome.tabs.getAllInWindow(null, function(tabs){
     for (var i = 0; i < tabs.length; i++) {  
         var key = tabs[i].id;
         var value = 50;
-        
+
         createSlide(tabs[i], value);
         getData(key);
     }
@@ -23,15 +23,44 @@ chrome.tabs.getAllInWindow(null, function(tabs){
 });
 
 function getData(key) {
+    let item = document.getElementById(key.toString());
+
     chrome.storage.local.get([key.toString()], function(result) {
         if (typeof result[key] !== 'undefined') {
-            // Get existing value
-            let item = document.getElementById(key.toString());
+            // Get existing value and set its slider value
             item.value = result[key];
         }
         else{
             // Tab id doesnt exist in storage. Init value
-            chrome.storage.sync.set({[key]: 50}, function() {});
+            var code = `
+            var elements = document.getElementsByTagName("video");
+            if(elements.length != 0){
+              var element = elements[0]; 
+            }
+            else{
+              elements = document.getElementsByTagName("audio");
+              if(elements.length != 0){
+                  var element = elements[0]; 
+              }
+            }
+            element.volume;
+            `;
+
+            chrome.tabs.executeScript(key, { code }, function(result){
+                // If tab contains an audio source get its volume level
+                // And init a key - value for it in local storage
+                var initialValue = 50;
+
+                if(result != null){
+                    // result return an array
+                    // Volume value is a floating value between 0 and 1
+                    initialValue = result[0] * 100;
+                    // Set slider value
+                    item.value = initialValue;
+                }
+                // Init key - value in local storage
+                chrome.storage.sync.set({[key]: initialValue}, function() {});
+            });
         }
     });
 }
