@@ -3,8 +3,11 @@ chrome.tabs.getAllInWindow(null, function(tabs){
         var key = tabs[i].id;
         var value = 50;
 
-        createSlide(tabs[i], value);
-        getData(key);
+        // No sliders for tabs that have browser related content 
+        if(!tabs[i].url.startsWith("chrome")){
+            createSlide(tabs[i], value);
+            getData(key);
+        }
     }
 
     // Get all the sliders in the html
