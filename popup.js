@@ -78,7 +78,7 @@ function createSlide(tab, volume){
             </div>
         </div>
         <div class="slider">
-            <input id="${tab.id}" type="range" min="1" max="100" value="${volume}">
+            <input id="${tab.id}" type="range" min="0" max="100" value="${volume}">
         </div>
     </div>
     `;
