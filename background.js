@@ -10,15 +10,11 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
       // the document. If a element exists we change it's volume value
       var code = `var elements = document.getElementsByTagName("video");
                   if(elements.length != 0){
-                    var element = elements[0]; 
-                    element.volume = ${newVolumeAsFloat};
+                    Array.from(elements).forEach(element => element.volume = ${newVolumeAsFloat});
                   }
                   else{
                     elements = document.getElementsByTagName("audio");
-                    if(elements.length != 0){
-                        var element = elements[0]; 
-                        element.volume = ${newVolumeAsFloat};
-                    }
+                    Array.from(elements).forEach(element => element.volume = ${newVolumeAsFloat});
                 }`;
 
       chrome.tabs.executeScript(tabId, { code });

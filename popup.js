@@ -62,7 +62,7 @@ function getData(key) {
                     item.value = initialValue;
                 }
                 // Init key - value in local storage
-                chrome.storage.sync.set({[key]: initialValue}, function() {});
+                chrome.storage.local.set({[key]: initialValue}, function() {});
             });
         }
     });
